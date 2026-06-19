@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class CarController : MonoBehaviour
 {
@@ -7,46 +6,64 @@ public class CarController : MonoBehaviour
 
     public float speed = 7f;
     public float turnSpeed = 2f;
+    public float waypointDistance = 1f;
 
     private int currentWaypoint = 0;
+    private bool goingForward = true;
 
     void Update()
     {
-        if (waypoints.Length == 0)
+        if (waypoints == null || waypoints.Length == 0)
             return;
 
-        Transform target =
-            waypoints[currentWaypoint];
+        Transform target = waypoints[currentWaypoint];
 
-        Vector3 direction =
-            target.position - transform.position;
+        Vector3 direction = target.position - transform.position;
 
-        Quaternion targetRotation =
-            Quaternion.LookRotation(direction);
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation =
+                Quaternion.LookRotation(direction);
 
-        transform.rotation =
-            Quaternion.Slerp(
+            transform.rotation = Quaternion.Slerp(
                 transform.rotation,
                 targetRotation,
                 turnSpeed * Time.deltaTime
             );
+        }
 
-        transform.position +=
-            transform.forward *
-            speed *
-            Time.deltaTime;
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            target.position,
+            speed * Time.deltaTime
+        );
 
-        if (Vector3.Distance(
-                transform.position,
-                target.position) < 2f)
+        if (Vector3.Distance(transform.position, target.position) < waypointDistance)
         {
-            currentWaypoint++;
-
-            if (currentWaypoint >= waypoints.Length)
+            if (goingForward)
             {
-                currentWaypoint = 0;
+                if (currentWaypoint < waypoints.Length - 1)
+                {
+                    currentWaypoint++;
+                }
+                else
+                {
+                    goingForward = false;
+                    currentWaypoint--;
+                }
+            }
+            else
+            {
+                if (currentWaypoint > 0)
+                {
+                    currentWaypoint--;
+                }
+                else
+                {
+                    goingForward = true;
+                    currentWaypoint++;
+                }
             }
         }
     }
-
 }

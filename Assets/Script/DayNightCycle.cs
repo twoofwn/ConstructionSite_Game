@@ -1,0 +1,26 @@
+﻿using UnityEngine;
+
+public class DayNightCycle : MonoBehaviour
+{
+    public float dayDuration = 60f;
+
+    void Update()
+    {
+        float rotationSpeed = 360f / dayDuration;
+
+        transform.Rotate(
+            rotationSpeed * Time.deltaTime,
+            0,
+            0
+        );
+
+        float sunHeight = transform.forward.y;
+
+        Light sun = GetComponent<Light>();
+
+        sun.intensity = Mathf.Clamp01(
+            sunHeight * 2f
+        );
+    }
+
+}
