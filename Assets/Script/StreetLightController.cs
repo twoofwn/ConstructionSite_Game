@@ -20,7 +20,7 @@ public class StreetLightController : MonoBehaviour
 
     void Update()
     {
-        bool isNight = Sun.transform.forward.y < 0;
+        bool isNight = Sun.transform.forward.y < -0.1f;
 
         foreach (Light l in StreetLights)
         {
