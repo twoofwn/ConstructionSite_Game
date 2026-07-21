@@ -17,10 +17,9 @@ public class DayNightCycle : MonoBehaviour
         float sunHeight = transform.forward.y;
 
         Light sun = GetComponent<Light>();
-
-        sun.intensity = Mathf.Clamp01(
-            sunHeight * 2f
-        );
+        sun.intensity = Mathf.Clamp01(sunHeight * 2f);
+        //float t = Mathf.Clamp01(sunHeight * 0.5f + 0.5f);
+        //sun.intensity = Mathf.Lerp(0f, 70000f, t);
     }
 
 }
